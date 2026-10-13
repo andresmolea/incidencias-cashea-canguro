@@ -58,6 +58,9 @@
   .finding p + p { margin-top: 12px; }
   .finding .addr { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; color: var(--ink-soft); background: var(--paper); border-radius: 6px; padding: 10px 14px; margin-top: 14px; display: inline-block; }
   footer { font-size: 13px; color: var(--ink-faint); margin-top: 48px; }
+  .nav { display: flex; gap: 18px; margin-bottom: 28px; font-size: 14px; }
+  .nav a { color: var(--ink-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; }
+  .nav a.active { color: var(--accent); font-weight: 700; border-bottom-color: var(--accent); }
   @media (max-width: 640px) {
     .bar-row { grid-template-columns: 1fr; gap: 6px; }
     .bar-count { text-align: left; }
@@ -65,6 +68,10 @@
 </style>
 
 <div class="wrap">
+  <div class="nav">
+    <a href="index.html" class="active">Canguro</a>
+    <a href="todos.html">Todos los comercios</a>
+  </div>
   <p class="kicker">Incidencias Cashea</p>
   <h1>Canguro: incidencias por motivo</h1>
   <p class="subtitle">Septiembre y octubre (parcial) 2026, recopilado de #incidencias-cashea. Conteos verificados mensaje por mensaje, duplicados y comercios mal atribuidos ya excluidos.</p>
