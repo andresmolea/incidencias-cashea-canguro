@@ -6,50 +6,61 @@
 <title>Incidencias Cashea</title>
 <style>
   :root {
-    --paper: #faf7f2;
+    --paper: #f6f4fb;
     --paper-raised: #ffffff;
-    --ink: #1e2430;
-    --ink-soft: #5b6472;
-    --ink-faint: #8b93a0;
-    --accent: #3a5a8c;
-    --accent-soft: #e8edf5;
-    --accent-oct: #2f6e64;
-    --accent-oct-soft: #e2efec;
+    --ink: #241642;
+    --ink-soft: #5c5370;
+    --ink-faint: #938aa8;
+    --accent: #1f9d6c;
+    --accent-soft: #e3f6ec;
+    --accent-oct: #6336ad;
+    --accent-oct-soft: #efe7fa;
     --warning: #a8791f;
     --warning-soft: #f6eedd;
-    --line: #e4dfd6;
-    --shadow: 0 4px 24px rgba(30, 36, 48, 0.08);
+    --line: #e4dff0;
+    --shadow: 0 4px 24px rgba(61, 30, 109, 0.10);
+    --brand-purple: #3d1e6d;
+    --brand-purple-deep: #271047;
+    --brand-mint: #3ecf8e;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --paper: #14181f; --paper-raised: #1b212a; --ink: #edeef0; --ink-soft: #9ba3af; --ink-faint: #6b7280;
-      --accent: #7c9fd6; --accent-soft: #1e2a3d; --accent-oct: #6cc2b3; --accent-oct-soft: #182824;
-      --warning: #d7a94f; --warning-soft: #2d2618;
-      --line: #2a3038; --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --paper: #231140; --paper-raised: #2e1753; --ink: #f3effa; --ink-soft: #c7bcdc; --ink-faint: #8f7fb0;
+      --accent: #4fe3a0; --accent-soft: #1c3b2a; --accent-oct: #b48bf0; --accent-oct-soft: #3a2763;
+      --warning: #d7a94f; --warning-soft: #332511;
+      --line: #3a2365; --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
     }
   }
   :root[data-theme="dark"] {
-    --paper: #14181f; --paper-raised: #1b212a; --ink: #edeef0; --ink-soft: #9ba3af; --ink-faint: #6b7280;
-    --accent: #7c9fd6; --accent-soft: #1e2a3d; --accent-oct: #6cc2b3; --accent-oct-soft: #182824;
-    --warning: #d7a94f; --warning-soft: #2d2618;
-    --line: #2a3038; --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    --paper: #231140; --paper-raised: #2e1753; --ink: #f3effa; --ink-soft: #c7bcdc; --ink-faint: #8f7fb0;
+    --accent: #4fe3a0; --accent-soft: #1c3b2a; --accent-oct: #b48bf0; --accent-oct-soft: #3a2763;
+    --warning: #d7a94f; --warning-soft: #332511;
+    --line: #3a2365; --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { padding: 56px 24px 88px; }
-  .wrap { max-width: 1000px; margin: 0 auto; }
-  .kicker { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0 0 10px; }
-  h1 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: clamp(30px, 4.5vw, 44px); font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; text-wrap: balance; }
-  .subtitle { font-size: 16px; color: var(--ink-soft); margin: 0 0 20px; max-width: 65ch; line-height: 1.5; }
-  .jumpnav { display: flex; gap: 10px; margin-bottom: 40px; }
-  .jumpnav a { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; text-decoration: none; color: var(--ink-soft); background: var(--paper-raised); border: 1px solid var(--line); border-radius: 20px; padding: 6px 14px; transition: border-color .15s, color .15s; }
-  .jumpnav a:hover { border-color: var(--accent); color: var(--accent); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+  .hero { position: relative; background: linear-gradient(145deg, var(--brand-purple-deep) 0%, var(--brand-purple) 60%, #4a2680 100%); padding: 48px 0 84px; overflow: hidden; }
+  .hero .wrap { padding-top: 8px; padding-bottom: 8px; }
+  .hero-wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 64px; display: block; }
+
+  .kicker { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand-mint); font-weight: 700; margin: 0 0 10px; }
+  h1 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: clamp(30px, 4.5vw, 44px); font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; text-wrap: balance; color: #ffffff; }
+  .subtitle { font-size: 16px; color: rgba(255,255,255,0.72); margin: 0 0 24px; max-width: 65ch; line-height: 1.5; }
+  .jumpnav { display: flex; gap: 10px; margin-bottom: 36px; }
+  .jumpnav a { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; text-decoration: none; color: #ffffff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.28); border-radius: 20px; padding: 6px 14px; transition: background .15s, border-color .15s; }
+  .jumpnav a:hover { background: var(--brand-mint); border-color: var(--brand-mint); color: #152e22; }
+
   h2 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: 22px; font-weight: 700; margin: 0; }
   h3 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: 17px; font-weight: 700; margin: 0; }
-  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 52px; }
-  .stat-card { flex: 1; min-width: 150px; background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; box-shadow: var(--shadow); padding: 20px 22px; }
-  .stat-card .num { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 36px; font-weight: 700; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
-  .stat-card .label { font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
+
+  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .stat-card { flex: 1; min-width: 150px; background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.18); border-top: 3px solid var(--brand-mint); border-radius: 10px; padding: 20px 22px; }
+  .stat-card .num { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 36px; font-weight: 700; color: var(--brand-mint); line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat-card .label { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 6px; }
+
+  .content { padding-top: 48px; padding-bottom: 88px; }
 
   .month-section { margin-bottom: 64px; }
   .month-section.sept { --m-accent: var(--accent); --m-accent-soft: var(--accent-soft); }
@@ -101,33 +112,41 @@
 </head>
 <body>
 
-<div class="wrap">
-  <p class="kicker">Incidencias Cashea</p>
-  <h1>Todos los comercios, mes por mes</h1>
-  <p class="subtitle">1 de septiembre al 13 de octubre 2026, recopilado de #incidencias-cashea. Duplicados exactos y órdenes mal atribuidas ya corregidas.</p>
-  <div class="jumpnav">
-    <a href="#septiembre">↓ Septiembre</a>
-    <a href="#octubre">↓ Octubre</a>
-  </div>
+<div class="hero">
+  <div class="wrap">
+    <p class="kicker">Incidencias Cashea</p>
+    <h1>Todos los comercios, mes por mes</h1>
+    <p class="subtitle">1 de septiembre al 13 de octubre 2026, recopilado de #incidencias-cashea. Duplicados exactos y órdenes mal atribuidas ya corregidas.</p>
+    <div class="jumpnav">
+      <a href="#septiembre">↓ Septiembre</a>
+      <a href="#octubre">↓ Octubre</a>
+    </div>
 
-  <div class="stat-row">
-    <div class="stat-card">
-      <div class="num">559</div>
-      <div class="label">incidencias totales</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">429</div>
-      <div class="label">en septiembre</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">130</div>
-      <div class="label">en octubre (1-13)</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">145</div>
-      <div class="label">comercios distintos</div>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="num">559</div>
+        <div class="label">incidencias totales</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">429</div>
+        <div class="label">en septiembre</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">130</div>
+        <div class="label">en octubre (1-13)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">145</div>
+        <div class="label">comercios distintos</div>
+      </div>
     </div>
   </div>
+  <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C240,80 480,0 720,24 C960,48 1200,8 1440,32 L1440,80 L0,80 Z" fill="#3ecf8e"></path>
+  </svg>
+</div>
+
+<div class="wrap content">
 
   <section class="month-section sept" id="septiembre">
     <div class="month-head">
