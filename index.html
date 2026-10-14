@@ -48,6 +48,10 @@
   .kicker { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand-mint); font-weight: 700; margin: 0 0 10px; }
   h1 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: clamp(30px, 4.5vw, 44px); font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; text-wrap: balance; color: #ffffff; }
   .subtitle { font-size: 16px; color: rgba(255,255,255,0.72); margin: 0; max-width: 65ch; line-height: 1.5; }
+  .hero-row { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .hero-text { flex: 1; min-width: 0; }
+  .hero-logo { width: 220px; max-width: 32vw; height: auto; flex-shrink: 0; }
+  @media (max-width: 640px) { .hero-logo { display: none; } }
 
   h2 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: 22px; font-weight: 700; margin: 0; }
   h3 { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: 17px; font-weight: 700; margin: 0; }
@@ -140,9 +144,14 @@
 
 <div class="hero">
   <div class="wrap">
-    <p class="kicker">Incidencias Cashea</p>
-    <h1>Todos los comercios, mes por mes</h1>
-    <p class="subtitle">1 de septiembre al 13 de octubre 2026, recopilado de #incidencias-cashea. Duplicados exactos y órdenes mal atribuidas ya corregidas.</p>
+    <div class="hero-row">
+      <div class="hero-text">
+        <p class="kicker">Incidencias Cashea</p>
+        <h1>Todos los comercios, mes por mes</h1>
+        <p class="subtitle">1 de septiembre al 13 de octubre 2026, recopilado de #incidencias-cashea. Duplicados exactos y órdenes mal atribuidas ya corregidas.</p>
+      </div>
+      <img class="hero-logo" src="logos/yummy-badge.png" alt="Yummy">
+    </div>
   </div>
   <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M0,40 C240,80 480,0 720,24 C960,48 1200,8 1440,32 L1440,80 L0,80 Z" fill="#3ecf8e"></path>
