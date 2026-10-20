@@ -123,9 +123,9 @@
   .filtro-presets { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
   .filtro-presets button { font: inherit; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--m-accent, var(--accent)); background: var(--m-accent-soft, var(--accent-soft)); border: 1px solid var(--line); border-radius: 16px; padding: 7px 14px; transition: filter .15s; }
   .filtro-presets button:hover { filter: brightness(0.95); }
-  #panel-filtro .month-section, #panel-filtro { --m-accent: var(--brand-purple); --m-accent-soft: #ece4f7; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) #panel-filtro { --m-accent-soft: #3a2763; } }
-  :root[data-theme="dark"] #panel-filtro { --m-accent-soft: #3a2763; }
+  #panel-inicio { --m-accent: var(--brand-purple); --m-accent-soft: #ece4f7; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) #panel-inicio { --m-accent-soft: #3a2763; } }
+  :root[data-theme="dark"] #panel-inicio { --m-accent-soft: #3a2763; }
   .filtro-empty { color: var(--ink-faint); font-size: 13.5px; padding: 20px 4px; }
 
   .compare-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 16px; }
@@ -176,7 +176,6 @@
     <button data-tab="septiembre">Septiembre</button>
     <button data-tab="octubre">Octubre</button>
     <button data-tab="comparativas">Comparativas</button>
-    <button data-tab="filtro">Filtro por fecha</button>
   </div>
 
   <div class="tab-panel active" id="panel-inicio">
@@ -199,6 +198,45 @@
       </div>
     </div>
     <p class="intro-text">Este tablero recopila las incidencias de pedidos financiados por Cashea reportadas en #incidencias-cashea. Usa las pestañas de arriba para ver el detalle de cada mes (ranking de comercios y motivos) o la pestaña de <strong>Comparativas</strong> para ver cómo cambió cada comercio entre septiembre y octubre.</p>
+
+    <div class="month-head" style="border-color:var(--line)">
+      <h2>Filtro por fecha</h2>
+      <span class="mstat" id="filtro-rango-label">1 sep – 19 oct 2026</span>
+    </div>
+    <p class="caveat">Recalcula comercios y motivos para el rango de fechas que elijas. El total puede diferir un poco (±3%) de los números oficiales de las pestañas de Septiembre/Octubre por algunos reportes duplicados o corregidos que no se pudieron conciliar al 100%.</p>
+
+    <div class="filtro-controls">
+      <label>Desde <input type="date" id="filtro-desde" min="2026-09-01" max="2026-10-19" value="2026-09-01"></label>
+      <label>Hasta <input type="date" id="filtro-hasta" min="2026-09-01" max="2026-10-19" value="2026-10-19"></label>
+      <div class="filtro-presets">
+        <button type="button" data-preset="7">Últimos 7 días</button>
+        <button type="button" data-preset="14">Últimos 14 días</button>
+        <button type="button" data-preset="sep">Todo septiembre</button>
+        <button type="button" data-preset="oct">Todo octubre</button>
+        <button type="button" data-preset="all">Todo el período</button>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="num" id="filtro-total">0</div>
+        <div class="label">incidencias en el rango</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="filtro-dias">0</div>
+        <div class="label">días incluidos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="filtro-comercios">0</div>
+        <div class="label">comercios distintos</div>
+      </div>
+    </div>
+
+    <p class="section-label">Top comercios en el rango</p>
+    <div class="panel" id="filtro-top-comercios"></div>
+
+    <p class="section-label">Motivos de los comercios con mayor volumen</p>
+    <div class="merchant-grid" id="filtro-merchant-grid"></div>
   </div>
 
   <div class="tab-panel" id="panel-septiembre">
@@ -547,46 +585,6 @@
     </div>
   </div>
 
-  <div class="tab-panel" id="panel-filtro">
-    <div class="month-head" style="border-color:var(--line)">
-      <h2>Filtro por fecha</h2>
-      <span class="mstat" id="filtro-rango-label">1 sep – 19 oct 2026</span>
-    </div>
-    <p class="caveat">Recalcula comercios y motivos para el rango de fechas que elijas. El total puede diferir un poco (±3%) de los números oficiales de las pestañas de Septiembre/Octubre por algunos reportes duplicados o corregidos que no se pudieron conciliar al 100%.</p>
-
-    <div class="filtro-controls">
-      <label>Desde <input type="date" id="filtro-desde" min="2026-09-01" max="2026-10-19" value="2026-09-01"></label>
-      <label>Hasta <input type="date" id="filtro-hasta" min="2026-09-01" max="2026-10-19" value="2026-10-19"></label>
-      <div class="filtro-presets">
-        <button type="button" data-preset="7">Últimos 7 días</button>
-        <button type="button" data-preset="14">Últimos 14 días</button>
-        <button type="button" data-preset="sep">Todo septiembre</button>
-        <button type="button" data-preset="oct">Todo octubre</button>
-        <button type="button" data-preset="all">Todo el período</button>
-      </div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-card">
-        <div class="num" id="filtro-total">0</div>
-        <div class="label">incidencias en el rango</div>
-      </div>
-      <div class="stat-card">
-        <div class="num" id="filtro-dias">0</div>
-        <div class="label">días incluidos</div>
-      </div>
-      <div class="stat-card">
-        <div class="num" id="filtro-comercios">0</div>
-        <div class="label">comercios distintos</div>
-      </div>
-    </div>
-
-    <p class="section-label">Top comercios en el rango</p>
-    <div class="panel" id="filtro-top-comercios"></div>
-
-    <p class="section-label">Motivos de los comercios con mayor volumen</p>
-    <div class="merchant-grid" id="filtro-merchant-grid"></div>
-  </div>
 
   <footer>Datos recopilados de #incidencias-cashea. Última actualización: 19 de octubre 2026.</footer>
 </div>
