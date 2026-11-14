@@ -159,7 +159,7 @@
       <div class="hero-text">
         <p class="kicker">Incidencias Cashea</p>
         <h1>Todos los comercios, mes por mes</h1>
-        <p class="subtitle">1 de septiembre al 30 de octubre 2026, recopilado de #incidencias-cashea. Duplicados exactos y órdenes mal atribuidas ya corregidas.</p>
+        <p class="subtitle">1 de septiembre al 31 de octubre 2026, recopilado de #incidencias-cashea. Duplicados exactos y órdenes mal atribuidas ya corregidas.</p>
       </div>
       <img class="hero-logo" src="logos/yummy-transparent.png" alt="Yummy">
     </div>
@@ -181,7 +181,7 @@
   <div class="tab-panel active" id="panel-inicio">
     <div class="stat-row">
       <div class="stat-card">
-        <div class="num">931</div>
+        <div class="num">933</div>
         <div class="label">incidencias totales</div>
       </div>
       <div class="stat-card">
@@ -190,7 +190,7 @@
       </div>
       <div class="stat-card">
         <div class="num">504</div>
-        <div class="label">en octubre (1-30)</div>
+        <div class="label">en octubre</div>
       </div>
       <div class="stat-card">
         <div class="num">200</div>
@@ -201,13 +201,13 @@
 
     <div class="month-head" style="border-color:var(--line)">
       <h2>Filtro por fecha</h2>
-      <span class="mstat" id="filtro-rango-label">1 sep – 30 oct 2026</span>
+      <span class="mstat" id="filtro-rango-label">1 sep – 31 oct 2026</span>
     </div>
     <p class="caveat">Recalcula comercios y motivos para el rango de fechas que elijas. El total puede diferir un poco (±3%) de los números oficiales de las pestañas de Septiembre/Octubre por algunos reportes duplicados o corregidos que no se pudieron conciliar al 100%.</p>
 
     <div class="filtro-controls">
-      <label>Desde <input type="date" id="filtro-desde" min="2026-09-01" max="2026-10-30" value="2026-09-01"></label>
-      <label>Hasta <input type="date" id="filtro-hasta" min="2026-09-01" max="2026-10-30" value="2026-10-30"></label>
+      <label>Desde <input type="date" id="filtro-desde" min="2026-09-01" max="2026-10-31" value="2026-09-01"></label>
+      <label>Hasta <input type="date" id="filtro-hasta" min="2026-09-01" max="2026-10-31" value="2026-10-31"></label>
       <div class="filtro-presets">
         <button type="button" data-preset="7">Últimos 7 días</button>
         <button type="button" data-preset="14">Últimos 14 días</button>
@@ -369,8 +369,8 @@
   <div class="tab-panel" id="panel-octubre">
     <section class="month-section oct">
       <div class="month-head">
-        <h2>Octubre (parcial)</h2>
-        <span class="mstat"><b>504</b> incidencias · del 1 al 30</span>
+        <h2>Octubre</h2>
+        <span class="mstat"><b>504</b> incidencias · del 1 al 31</span>
       </div>
 
       <p class="section-label">Top comercios del mes</p>
@@ -511,8 +511,8 @@
       <h2>Comparativas</h2>
       <span class="mstat">septiembre vs. octubre</span>
     </div>
-    <p class="caveat">Octubre es parcial (1 al 30, 30 días) contra un septiembre completo (30 días) — una baja en octubre no siempre significa mejora real, puede ser solo que falta medio mes por contar.</p>
-    <div class="legend"><span><i class="sep"></i> Septiembre</span><span><i class="oc"></i> Octubre (parcial)</span></div>
+    <p class="caveat">Ambos meses están completos: septiembre (30 días) contra octubre (31 días, sin reportes el 31). Octubre tiene un día calendario más, tenlo en cuenta al comparar.</p>
+    <div class="legend"><span><i class="sep"></i> Septiembre</span><span><i class="oc"></i> Octubre</span></div>
 
     <div class="total-flanked">
       <img class="flank-logo" src="logos/yummy-rides.png" alt="Yummy Rides">
@@ -610,7 +610,7 @@
   </div>
 
 
-  <footer>Datos recopilados de #incidencias-cashea. Última actualización: 30 de octubre 2026.</footer>
+  <footer>Datos recopilados de #incidencias-cashea. Última actualización: 14 de noviembre 2026 (octubre cerrado al 31).</footer>
 </div>
 
 <script>
@@ -710,11 +710,11 @@
       var p = btn.dataset.preset;
       var desdeInput = document.getElementById('filtro-desde');
       var hastaInput = document.getElementById('filtro-hasta');
-      if (p === '7') { desdeInput.value = '2026-10-24'; hastaInput.value = '2026-10-30'; }
-      else if (p === '14') { desdeInput.value = '2026-10-17'; hastaInput.value = '2026-10-30'; }
+      if (p === '7') { desdeInput.value = '2026-10-25'; hastaInput.value = '2026-10-31'; }
+      else if (p === '14') { desdeInput.value = '2026-10-18'; hastaInput.value = '2026-10-31'; }
       else if (p === 'sep') { desdeInput.value = '2026-09-01'; hastaInput.value = '2026-09-30'; }
-      else if (p === 'oct') { desdeInput.value = '2026-10-01'; hastaInput.value = '2026-10-30'; }
-      else if (p === 'all') { desdeInput.value = '2026-09-01'; hastaInput.value = '2026-10-30'; }
+      else if (p === 'oct') { desdeInput.value = '2026-10-01'; hastaInput.value = '2026-10-31'; }
+      else if (p === 'all') { desdeInput.value = '2026-09-01'; hastaInput.value = '2026-10-31'; }
       renderFiltro();
     });
   });
