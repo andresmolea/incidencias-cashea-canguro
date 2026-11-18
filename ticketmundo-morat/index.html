@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticketmundo / Morat</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500..700&family=Inter:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+html, body { margin: 0; }
+body { background: var(--tm-bg); }
+.tm-root { font-family: 'Inter', Arial, sans-serif; color: var(--tm-ink); max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; box-sizing: border-box; }
+.tm-root, .tm-root * { box-sizing: border-box; }
+:root {
+  --tm-ink: #1B1A22;
+  --tm-sub: #6B6977;
+  --tm-bg: #F6F4EF;
+  --tm-card: #FFFFFF;
+  --tm-line: #E4E0D6;
+  --tm-accent: #5B4FD6;
+  --tm-accent-ink: #433AA8;
+  --tm-accent-tint: #ECEAFA;
+  --tm-amber: #C9762B;
+  --tm-amber-tint: #FBE8D2;
+  --tm-green: #1F7A52;
+  --tm-green-tint: #DCF2E6;
+  --tm-pending: #55546A;
+  --tm-pending-tint: #E7E6EC;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tm-ink: #EFEDF4; --tm-sub: #A8A5B8; --tm-bg: #17161F; --tm-card: #1F1E29; --tm-line: #322F40;
+    --tm-accent: #8F85F0; --tm-accent-ink: #C8C2FA; --tm-accent-tint: #2A2650;
+    --tm-amber: #E8A866; --tm-amber-tint: #3A2B16; --tm-green: #5FCB97; --tm-green-tint: #163828;
+    --tm-pending: #B6B4C6; --tm-pending-tint: #2B2A38;
+  }
+}
+.tm-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding-bottom: 24px; border-bottom: 2px solid var(--tm-line); margin-bottom: 36px; }
+.tm-eyebrow { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tm-accent-ink); margin: 0 0 8px; }
+.tm-h1 { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 34px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+.tm-section { margin-bottom: 52px; }
+.tm-section-title { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 21px; font-weight: 700; margin: 0 0 4px; line-height: 1.3; }
+.tm-section-sub { font-size: 14px; color: var(--tm-sub); margin: 0 0 20px; max-width: 760px; }
+
+.tm-stat-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
+.tm-stat-card { flex: 1 1 220px; background: var(--tm-card); border: 1px solid var(--tm-line); border-radius: 14px; padding: 20px 22px; }
+.tm-stat-num { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 36px; font-weight: 700; color: var(--tm-accent-ink); font-variant-numeric: tabular-nums; line-height: 1; }
+.tm-stat-label { font-size: 13px; color: var(--tm-sub); margin-top: 8px; line-height: 1.4; }
+
+.tm-chart-card { background: var(--tm-card); border: 1px solid var(--tm-line); border-radius: 14px; padding: 24px; position: relative; }
+.tm-chart-title { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 15px; font-weight: 700; margin: 0 0 2px; }
+.tm-chart-note { font-size: 12.5px; color: var(--tm-sub); margin: 2px 0 14px; }
+.tm-chart-wrap { width: 100%; overflow: visible; }
+.tm-bar { fill: var(--tm-accent); }
+.tm-bar.is-highlight { fill: var(--tm-amber); }
+.tm-bar.is-partial { fill: var(--tm-accent-tint); stroke: var(--tm-accent); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.tm-bar-val { fill: var(--tm-ink); font-size: 11px; font-weight: 600; font-family: 'Inter', Arial, sans-serif; text-anchor: middle; font-variant-numeric: tabular-nums; }
+.tm-axis text { fill: var(--tm-sub); font-size: 11px; font-family: 'Inter', Arial, sans-serif; }
+.tm-axis path, .tm-axis line { stroke: var(--tm-line); }
+.tm-tip { position: absolute; pointer-events: none; background: var(--tm-ink); color: var(--tm-bg); font-size: 12.5px; padding: 8px 12px; border-radius: 8px; opacity: 0; transform: translate(-50%, -125%); transition: opacity .1s; white-space: nowrap; z-index: 5; }
+.tm-charts-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+.tm-insight-card { background: var(--tm-ink); color: var(--tm-bg); border-radius: 16px; padding: 30px 32px; }
+.tm-insight-title { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 24px; font-weight: 700; margin: 0 0 10px; max-width: 640px; line-height: 1.25; }
+.tm-insight-sub { font-size: 14.5px; opacity: 0.85; max-width: 620px; line-height: 1.5; margin: 0 0 20px; }
+.tm-insight-nums { display: flex; flex-wrap: wrap; gap: 28px; margin-bottom: 18px; }
+.tm-insight-num { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 10px; }
+.tm-insight-arrow { font-size: 15px; font-weight: 500; opacity: 0.6; }
+.tm-insight-numlabel { font-size: 12.5px; opacity: 0.8; max-width: 220px; margin-top: 6px; line-height: 1.45; }
+.tm-insight-numlabel b { font-variant-numeric: tabular-nums; opacity: 1; }
+
+.tm-motivo-card { background: var(--tm-card); border: 1px solid var(--tm-line); border-radius: 14px; padding: 22px 24px; min-width: 0; }
+.tm-motivo-card h3 { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 16px; margin: 0 0 2px; }
+.tm-motivo-card .tm-chart-note { margin-bottom: 16px; }
+table.tm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.tm-table th { text-align: left; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--tm-sub); padding: 0 8px 10px 0; border-bottom: 1px solid var(--tm-line); }
+table.tm-table td { padding: 11px 8px 11px 0; border-bottom: 1px solid var(--tm-line); vertical-align: top; }
+table.tm-table tr:last-child td { border-bottom: none; }
+.tm-rank { font-family: 'Space Grotesk', Arial, sans-serif; font-weight: 700; color: var(--tm-accent-ink); width: 28px; }
+.tm-pct { font-family: 'Space Grotesk', Arial, sans-serif; font-weight: 700; color: var(--tm-accent-ink); white-space: nowrap; width: 72px; }
+.tm-count { font-family: 'Space Grotesk', Arial, sans-serif; font-weight: 700; color: var(--tm-accent-ink); white-space: nowrap; width: 56px; }
+.tm-quote { color: var(--tm-sub); font-size: 12.5px; margin-top: 4px; line-height: 1.4; }
+
+@media (min-width: 760px) { .tm-charts-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="tm-root" id="tm-root">
+  <div class="tm-head">
+    <div>
+      <p class="tm-eyebrow">Yummy LiveOps · Soporte Ticketmundo</p>
+      <h1 class="tm-h1">Ticketmundo / Morat</h1>
+    </div>
+  </div>
+
+  <div class="tm-section">
+    <h2 class="tm-section-title">¿Cuántos contactos recibimos en Ticketmundo, en octubre–noviembre?</h2>
+    <div class="tm-stat-row" id="tm-stat-row-general"></div>
+  </div>
+
+  <div class="tm-section">
+    <h2 class="tm-section-title">¿Cuánto chat recibimos por Morat, clasificado por motivo?</h2>
+    <p class="tm-section-sub">Chats que mencionan a Morat, por fecha de creación, y su clasificación completa por motivo.</p>
+    <div class="tm-stat-row" id="tm-stat-row"></div>
+    <div class="tm-charts-grid">
+      <div class="tm-chart-card">
+        <h3 class="tm-chart-title">Volumen semanal completo</h3>
+        <p class="tm-chart-note">23 mar – 18 nov 2026 · un solo pico domina todo el período, al abrir la venta.</p>
+        <div class="tm-chart-wrap" id="tm-chart-full"></div>
+      </div>
+      <div class="tm-chart-card">
+        <h3 class="tm-chart-title">Después del pico</h3>
+        <p class="tm-chart-note">11 semanas desde el 7 de septiembre — acá se ve la baja y el repunte reciente.</p>
+        <div class="tm-chart-wrap" id="tm-chart-tail"></div>
+      </div>
+    </div>
+    <div class="tm-motivo-card" style="margin-top:16px;">
+      <h3>Motivo (clasificación completa, 3.485 chats)</h3>
+      <p class="tm-chart-note">Categorías aproximadas.</p>
+      <table class="tm-table" id="tm-table-morat">
+        <thead><tr><th>Motivo</th><th>Chats</th><th>%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tm-section">
+    <h2 class="tm-section-title">Top razones por las que nos contactaron (general)</h2>
+    <div class="tm-motivo-card">
+      <p class="tm-chart-note">Estimado sobre ~650 mensajes de #team-ticketmundo; no hay tipificación sistemática, son rangos aproximados.</p>
+      <table class="tm-table" id="tm-table-general">
+        <thead><tr><th>#</th><th>Motivo</th><th>% aprox.</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tm-section">
+    <h2 class="tm-section-title">¿En cuántos días cesaron los contactos de Morat?</h2>
+    <div class="tm-insight-card">
+      <h3 class="tm-insight-title">No. Los contactos de Morat no se apagaron.</h3>
+      <p class="tm-insight-sub">Hay casos repartidos de forma constante desde al menos el 7 de octubre hasta hoy — más de 40 días seguidos, sin señal de parar. El evento es el 12 y 13 de diciembre: todavía no pasó.</p>
+      <div class="tm-insight-nums">
+        <div class="tm-insight-item">
+          <p class="tm-insight-num"><span id="in-a"></span><span class="tm-insight-arrow">→</span><span id="in-b"></span></p>
+          <p class="tm-insight-numlabel" id="in-label1"></p>
+        </div>
+        <div class="tm-insight-item">
+          <p class="tm-insight-num"><span id="in-b2"></span><span class="tm-insight-arrow">÷ 7 días</span></p>
+          <p class="tm-insight-numlabel" id="in-label2"></p>
+        </div>
+        <div class="tm-insight-item">
+          <p class="tm-insight-num"><span id="in-p"></span><span class="tm-insight-arrow">÷ 3 días</span></p>
+          <p class="tm-insight-numlabel" id="in-label3"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var TICKETMUNDO_GENERAL = [
+    { periodo: "Octubre 2026", contactos: 378 },
+    { periodo: "Noviembre 2026 (1–18)", contactos: 789 }
+  ];
+  var MORAT_WEEKLY = [
+    { week_label: "23–29 mar", chats: 2 },
+    { week_label: "30 mar–5 abr", chats: 2 },
+    { week_label: "6–12 abr", chats: 1 },
+    { week_label: "13–19 abr", chats: 4 },
+    { week_label: "27 abr–3 may", chats: 1 },
+    { week_label: "1–7 jun", chats: 1 },
+    { week_label: "31 ago–6 sep", chats: 2440 },
+    { week_label: "7–13 sep", chats: 606 },
+    { week_label: "14–20 sep", chats: 157 },
+    { week_label: "21–27 sep", chats: 73 },
+    { week_label: "28 sep–4 oct", chats: 45 },
+    { week_label: "5–11 oct", chats: 19 },
+    { week_label: "12–18 oct", chats: 11 },
+    { week_label: "19–25 oct", chats: 15 },
+    { week_label: "26 oct–1 nov", chats: 22 },
+    { week_label: "2–8 nov", chats: 24 },
+    { week_label: "9–15 nov", chats: 49 },
+    { week_label: "16–18 nov (en curso, 3 días)", chats: 13 }
+  ];
+  var MOTIVOS_GENERAL = [
+    { rank: 1, motivo: "No recibió entradas o el QR (incluye reenvío por correo mal escrito)", pct_aprox: "35–40%" },
+    { rank: 2, motivo: "Validación o verificación de pago", pct_aprox: "15–18%" },
+    { rank: 3, motivo: "Problema al procesar el pago (error, cobro doble, saldo insuficiente)", pct_aprox: "~10%" },
+    { rank: 4, motivo: "Cambio de correo electrónico registrado", pct_aprox: "8–10%" },
+    { rank: 5, motivo: "Reembolso", pct_aprox: "6–8%" },
+    { rank: 6, motivo: "Consulta del evento / cambio de fecha o sector", pct_aprox: "6–8%" }
+  ];
+  var MOTIVOS_MORAT = [
+    { motivo: "Pagó y la página no valida el pago", descripcion: "Pagó con pago móvil o tarjeta, le descontaron el dinero y la página se queda cargando o da error. No recibe confirmación.", chats: 2250, pct: 65 },
+    { motivo: "Pagó y la entrada no llega o no aparece", descripcion: "Pagó, pero el correo con la entrada nunca llegó o no la ve en su correo ni en la app.", chats: 520, pct: 15 },
+    { motivo: "Dudas antes o durante la compra", descripcion: "Pregunta qué métodos de pago acepta, si la tarjeta de débito funciona, cómo comprar VIP o qué hacer si la página se recarga.", chats: 210, pct: 6 },
+    { motivo: "QR (varias entradas, un solo QR)", descripcion: "Compró varias entradas y recibió un solo QR, o perdió el QR y pide que se lo reenvíen.", chats: 60, pct: 2 },
+    { motivo: "Reembolso", descripcion: "Quiere que le devuelvan el dinero porque la entrada no llegó o el pago quedó sin validar.", chats: 35, pct: 1 },
+    { motivo: "Canje de la entrada", descripcion: "Pregunta cuándo o cómo canjear su compra, o ya canjeó y no le llegó.", chats: 35, pct: 1 },
+    { motivo: "Cambio de titular o de correo", descripcion: "Quiere cambiar el nombre del dueño de la entrada o corregir el correo de la compra.", chats: 20, pct: 0.6 },
+    { motivo: "Otros / sin motivo claro", descripcion: "Saludos sin pregunta, fecha equivocada, correo inexistente en compra internacional y casos sueltos.", chats: 355, pct: 10 }
+  ];
+
+  function fmtInt(n) { return d3.format(",.0f")(n).replace(/,/g, "."); }
+  function fmtPct(n) { return (Math.round(n * 10) / 10).toString().replace(".", ",") + "%"; }
+  function findWeek(label) { return MORAT_WEEKLY.filter(function (r) { return r.week_label.indexOf(label) === 0; })[0]; }
+
+  function renderStatCards(containerId, cards) {
+    var row = d3.select(containerId);
+    var card = row.selectAll(".tm-stat-card").data(cards).enter().append("div").attr("class", "tm-stat-card");
+    card.append("div").attr("class", "tm-stat-num").text(function (d) { return d.num; });
+    card.append("div").attr("class", "tm-stat-label").text(function (d) { return d.label; });
+  }
+
+  // ---------- Pregunta 1 ----------
+  (function () {
+    var total = TICKETMUNDO_GENERAL.reduce(function (s, r) { return s + r.contactos; }, 0);
+    function findRow(label) { return TICKETMUNDO_GENERAL.filter(function (d) { return d.periodo === label; })[0]; }
+    var oct = findRow("Octubre 2026"), nov = findRow("Noviembre 2026 (1–18)");
+    renderStatCards("#tm-stat-row-general", [
+      { num: fmtInt(total), label: "contactos con la etiqueta TicketMundo, 1 oct–18 nov" },
+      { num: fmtInt(oct.contactos), label: "en octubre" },
+      { num: fmtInt(nov.contactos), label: "en noviembre (1–18)" }
+    ]);
+  })();
+
+  // ---------- Pregunta 2: stat cards ----------
+  var weekA = findWeek("26 oct–1 nov"), weekB = findWeek("9–15 nov"), weekP = findWeek("16–18 nov");
+  var totalChats = MORAT_WEEKLY.reduce(function (s, r) { return s + r.chats; }, 0);
+  var peakWeek = findWeek("31 ago–6 sep");
+  var peakPct = Math.round((peakWeek.chats / totalChats) * 1000) / 10;
+  var growthFactor = Math.round((weekB.chats / weekA.chats) * 10) / 10;
+  var lastFullRate = Math.round((weekB.chats / 7) * 10) / 10;
+  var partialRate = Math.round((weekP.chats / 3) * 10) / 10;
+
+  renderStatCards("#tm-stat-row", [
+    { num: fmtInt(totalChats), label: "chats mencionan a Morat (23 mar–18 nov)" },
+    { num: fmtPct(peakPct), label: "del total cayó en una sola semana: 31 ago–6 sep, al abrir la venta" },
+    { num: "×" + growthFactor.toString().replace(".", ","), label: "subió el volumen entre el 26 oct–1 nov y el 9–15 nov" }
+  ]);
+
+  // ---------- Bar charts ----------
+  function drawBars(containerId, rows, opts) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var width = Math.max(el.clientWidth || el.parentElement.clientWidth || 600, 280);
+    var height = 220;
+    var margin = { top: 24, right: 8, bottom: 34, left: 8 };
+    d3.select(el).selectAll("svg").remove();
+    d3.select(el).selectAll(".tm-tip").remove();
+
+    var svg = d3.select(el).append("svg")
+      .attr("width", width).attr("height", height)
+      .attr("viewBox", "0 0 " + width + " " + height)
+      .style("overflow", "visible");
+
+    var x = d3.scaleBand().domain(rows.map(function (d) { return d.week_label; })).range([margin.left, width - margin.right]).padding(0.28);
+    var maxVal = d3.max(rows, function (d) { return d.chats; }) || 1;
+    var y = d3.scaleLinear().domain([0, maxVal]).nice().range([height - margin.bottom, margin.top]);
+
+    svg.append("g").attr("class", "tm-axis")
+      .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+      .call(d3.axisBottom(x).tickSize(0))
+      .selectAll("text")
+      .attr("transform", "rotate(-38)").style("text-anchor", "end").attr("dx", "-0.3em").attr("dy", "0.25em");
+    svg.select(".tm-axis .domain").attr("stroke", "var(--tm-line)");
+
+    var tip = d3.select(el).append("div").attr("class", "tm-tip");
+
+    svg.selectAll(".tm-bar").data(rows, function (d) { return d.week_label; })
+      .enter().append("rect")
+      .attr("class", function (d) { return "tm-bar" + (opts.highlight === d.week_label ? " is-highlight" : "") + (opts.partial && d.week_label.indexOf(opts.partial) === 0 ? " is-partial" : ""); })
+      .attr("x", function (d) { return x(d.week_label); })
+      .attr("width", x.bandwidth())
+      .attr("y", function (d) { return y(d.chats); })
+      .attr("height", function (d) { return (height - margin.bottom) - y(d.chats); })
+      .attr("rx", 4)
+      .on("mousemove", function (event, d) {
+        var box = el.getBoundingClientRect();
+        tip.style("opacity", 1)
+          .style("left", (event.clientX - box.left) + "px")
+          .style("top", (event.clientY - box.top) + "px")
+          .text(d.week_label + " — " + fmtInt(d.chats) + " chats");
+      })
+      .on("mouseleave", function () { tip.style("opacity", 0); });
+
+    svg.selectAll(".tm-bar-val").data(rows, function (d) { return d.week_label; })
+      .enter().append("text")
+      .attr("class", "tm-bar-val")
+      .attr("x", function (d) { return x(d.week_label) + x.bandwidth() / 2; })
+      .attr("y", function (d) { return y(d.chats) - 8; })
+      .text(function (d) { return fmtInt(d.chats); });
+  }
+
+  function renderCharts() {
+    drawBars("tm-chart-full", MORAT_WEEKLY, {});
+    var tail = MORAT_WEEKLY.filter(function (d) { return d.week_label.indexOf("31 ago") !== 0 && d.chats <= 700 && ["23–29 mar", "30 mar–5 abr", "6–12 abr", "13–19 abr", "27 abr–3 may", "1–7 jun"].indexOf(d.week_label) === -1; });
+    drawBars("tm-chart-tail", tail, { highlight: "9–15 nov", partial: "16–18 nov" });
+  }
+  renderCharts();
+  window.addEventListener("resize", renderCharts);
+
+  // ---------- Pregunta 4: insight numbers ----------
+  d3.select("#in-a").text(fmtInt(weekA.chats));
+  d3.select("#in-b").text(fmtInt(weekB.chats));
+  d3.select("#in-b2").text(fmtInt(weekB.chats));
+  d3.select("#in-p").text(fmtInt(weekP.chats));
+  d3.select("#in-label1").html("De la semana del <b>26 oct–1 nov</b> a la del <b>9–15 nov</b>, el volumen casi se duplicó (×" + growthFactor.toString().replace(".", ",") + ").");
+  d3.select("#in-label2").html("En la última semana completa (9–15 nov), el ritmo fue de <b>" + lastFullRate.toString().replace(".", ",") + " chats por día</b>.");
+  d3.select("#in-label3").html("En lo que va de esta semana (16–18 nov, apenas 3 días), el ritmo es de <b>" + partialRate.toString().replace(".", ",") + " chats por día</b> — más bajo que la semana pasada, pero todavía muy por encima del promedio de octubre.");
+
+  // ---------- Motivos tables ----------
+  (function () {
+    var tbody = d3.select("#tm-table-general tbody");
+    var rows = tbody.selectAll("tr").data(MOTIVOS_GENERAL).enter().append("tr");
+    rows.append("td").attr("class", "tm-rank").text(function (d) { return d.rank; });
+    rows.append("td").text(function (d) { return d.motivo; });
+    rows.append("td").attr("class", "tm-pct").text(function (d) { return d.pct_aprox; });
+  })();
+
+  (function () {
+    var tbody = d3.select("#tm-table-morat tbody");
+    var rows = tbody.selectAll("tr").data(MOTIVOS_MORAT).enter().append("tr");
+    var motivoCell = rows.append("td");
+    motivoCell.append("div").text(function (d) { return d.motivo; });
+    motivoCell.append("div").attr("class", "tm-quote").text(function (d) { return d.descripcion || ""; });
+    rows.append("td").attr("class", "tm-count").text(function (d) { return "~" + fmtInt(d.chats); });
+    rows.append("td").attr("class", "tm-pct").text(function (d) { return "~" + d.pct.toString().replace(".", ",") + "%"; });
+  })();
+})();
+</script>
+</body>
+</html>
