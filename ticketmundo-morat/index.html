@@ -176,6 +176,16 @@ table.tm-table tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <div class="tm-section">
+    <h2 class="tm-section-title">Completación manual</h2>
+    <div class="tm-motivo-card">
+      <table class="tm-table" id="tm-table-completacion-manual">
+        <thead><tr><th>Caso</th><th>Qué pasó</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -231,6 +241,10 @@ table.tm-table tr:last-child td { border-bottom: none; }
     { chat_url: "https://yummy.kustomerapp.com/app/customers/6aa0238a6a0fd35e5cb080fc/event/6afce4a398d1f1a05a5724af", explicacion: "El bot tomó la solicitud de cancelación como una emergencia. Se ve que la mayoría de las cancelaciones que se remiten al analista entran por la cola de emergencia." },
     { chat_url: "https://yummy.kustomerapp.com/app/customers/65500e010cddba6b16ecefa8/event/6afd0f22ca05fccab2f5cfe7", explicacion: "El bot no reconoce el viaje activo y remite a un analista; el viaje fue cancelado por el analista." },
     { chat_url: "https://yummy.kustomerapp.com/app/customers/6af79fd77686d086dc2a0891/event/6afa0ea905752d91a5bd233f", explicacion: "El bot no remitió el caso a un analista: canceló el viaje directamente." }
+  ];
+  var COMPLETACION_MANUAL_CASOS = [
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/67ded86af4552e1ec216697e/event/6afdad2ce48175f538c692fa", explicacion: "El bot no reconoce el viaje activo por el conductor y lo asigna al analista para su completación" },
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/6abe5c6bab44bfea4db871d7/event/6afd62583e312c12a0335be8", explicacion: "De igual forma, el bot no reconoce el viaje y asigna a un analista" }
   ];
 
   function fmtInt(n) { return d3.format(",.0f")(n).replace(/,/g, "."); }
@@ -372,6 +386,7 @@ table.tm-table tr:last-child td { border-bottom: none; }
   }
   renderCasosTable(CLEAR_DEVICE_CASOS, "#tm-table-clear-device");
   renderCasosTable(CANCELACION_MANUAL_CASOS, "#tm-table-cancelacion-manual");
+  renderCasosTable(COMPLETACION_MANUAL_CASOS, "#tm-table-completacion-manual");
 })();
 </script>
 </body>
