@@ -80,6 +80,8 @@ table.tm-table tr:last-child td { border-bottom: none; }
 .tm-pct { font-family: 'Space Grotesk', Arial, sans-serif; font-weight: 700; color: var(--tm-accent-ink); white-space: nowrap; width: 72px; }
 .tm-count { font-family: 'Space Grotesk', Arial, sans-serif; font-weight: 700; color: var(--tm-accent-ink); white-space: nowrap; width: 56px; }
 .tm-quote { color: var(--tm-sub); font-size: 12.5px; margin-top: 4px; line-height: 1.4; }
+.tm-caso-link { color: var(--tm-accent-ink); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.tm-caso-link:hover { text-decoration: underline; }
 
 @media (min-width: 760px) { .tm-charts-grid { grid-template-columns: 1fr 1fr; } }
 </style>
@@ -154,6 +156,26 @@ table.tm-table tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <div class="tm-section">
+    <h2 class="tm-section-title">Clear device — conductores</h2>
+    <div class="tm-motivo-card">
+      <table class="tm-table" id="tm-table-clear-device">
+        <thead><tr><th>Caso</th><th>Qué pasó</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tm-section">
+    <h2 class="tm-section-title">Cancelación manual</h2>
+    <div class="tm-motivo-card">
+      <table class="tm-table" id="tm-table-cancelacion-manual">
+        <thead><tr><th>Caso</th><th>Qué pasó</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -199,6 +221,16 @@ table.tm-table tr:last-child td { border-bottom: none; }
     { motivo: "Canje de la entrada", descripcion: "Pregunta cuándo o cómo canjear su compra, o ya canjeó y no le llegó.", chats: 35, pct: 1 },
     { motivo: "Cambio de titular o de correo", descripcion: "Quiere cambiar el nombre del dueño de la entrada o corregir el correo de la compra.", chats: 20, pct: 0.6 },
     { motivo: "Otros / sin motivo claro", descripcion: "Saludos sin pregunta, fecha equivocada, correo inexistente en compra internacional y casos sueltos.", chats: 355, pct: 10 }
+  ];
+
+  var CLEAR_DEVICE_CASOS = [
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/6af64bdb557b5097f421a33c/event/6afcf587c7b88972a65264d6", explicacion: "El bot asignó a un analista a pesar de que el driver envió el número de teléfono" },
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/6afd1fd031007005bc8d468f/event/6afd1fd0a4bc5f859bf0491a", explicacion: "El bot asignó a un analista a pesar de que el driver envió el número de teléfono" }
+  ];
+  var CANCELACION_MANUAL_CASOS = [
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/6aa0238a6a0fd35e5cb080fc/event/6afce4a398d1f1a05a5724af", explicacion: "El bot tomó la solicitud de cancelación como una emergencia. Se ve que la mayoría de las cancelaciones que se remiten al analista entran por la cola de emergencia." },
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/65500e010cddba6b16ecefa8/event/6afd0f22ca05fccab2f5cfe7", explicacion: "El bot no reconoce el viaje activo y remite a un analista; el viaje fue cancelado por el analista." },
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/6af79fd77686d086dc2a0891/event/6afa0ea905752d91a5bd233f", explicacion: "El bot no remitió el caso a un analista: canceló el viaje directamente." }
   ];
 
   function fmtInt(n) { return d3.format(",.0f")(n).replace(/,/g, "."); }
@@ -327,6 +359,19 @@ table.tm-table tr:last-child td { border-bottom: none; }
     rows.append("td").attr("class", "tm-count").text(function (d) { return "~" + fmtInt(d.chats); });
     rows.append("td").attr("class", "tm-pct").text(function (d) { return "~" + d.pct.toString().replace(".", ",") + "%"; });
   })();
+
+  // ---------- Casos (links a chats de Kustomer con explicación) ----------
+  function renderCasosTable(data, tableId) {
+    var tbody = d3.select(tableId + " tbody");
+    var rows = tbody.selectAll("tr").data(data).enter().append("tr");
+    var linkCell = rows.append("td");
+    linkCell.append("a").attr("class", "tm-caso-link").attr("target", "_blank").attr("rel", "noopener")
+      .attr("href", function (d) { return d.chat_url; })
+      .text(function (d, i) { return "Caso " + (i + 1); });
+    rows.append("td").text(function (d) { return d.explicacion; });
+  }
+  renderCasosTable(CLEAR_DEVICE_CASOS, "#tm-table-clear-device");
+  renderCasosTable(CANCELACION_MANUAL_CASOS, "#tm-table-cancelacion-manual");
 })();
 </script>
 </body>
