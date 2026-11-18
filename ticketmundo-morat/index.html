@@ -186,6 +186,16 @@ table.tm-table tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <div class="tm-section">
+    <h2 class="tm-section-title">Solicitud de reembolso</h2>
+    <div class="tm-motivo-card">
+      <table class="tm-table" id="tm-table-reembolso">
+        <thead><tr><th>Caso</th><th>Qué pasó</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -245,6 +255,10 @@ table.tm-table tr:last-child td { border-bottom: none; }
   var COMPLETACION_MANUAL_CASOS = [
     { chat_url: "https://yummy.kustomerapp.com/app/customers/67ded86af4552e1ec216697e/event/6afdad2ce48175f538c692fa", explicacion: "El bot no reconoce el viaje activo por el conductor y lo asigna al analista para su completación" },
     { chat_url: "https://yummy.kustomerapp.com/app/customers/6abe5c6bab44bfea4db871d7/event/6afd62583e312c12a0335be8", explicacion: "De igual forma, el bot no reconoce el viaje y asigna a un analista" }
+  ];
+  var REEMBOLSO_CASOS = [
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/6a52f2e24e002f00b86928ca/event/6afdb9a75f4fb676614a243e", explicacion: "El usuario aclara que desea solicitar un reembolso y la IA lo toma como si quisiera consultar el estatus, por lo que remite el chat al analista" },
+    { chat_url: "https://yummy.kustomerapp.com/app/customers/64badac9e4a366e193ee4995/event/6afcdd9a3e312c12a02d42a9", explicacion: "El usuario llenó la solicitud de reembolso con el chatbot anterior pero no se generó solicitud alguna, por lo que generó el recontacto (caso del chatbot anterior, no del actual)" }
   ];
 
   function fmtInt(n) { return d3.format(",.0f")(n).replace(/,/g, "."); }
@@ -387,6 +401,7 @@ table.tm-table tr:last-child td { border-bottom: none; }
   renderCasosTable(CLEAR_DEVICE_CASOS, "#tm-table-clear-device");
   renderCasosTable(CANCELACION_MANUAL_CASOS, "#tm-table-cancelacion-manual");
   renderCasosTable(COMPLETACION_MANUAL_CASOS, "#tm-table-completacion-manual");
+  renderCasosTable(REEMBOLSO_CASOS, "#tm-table-reembolso");
 })();
 </script>
 </body>
